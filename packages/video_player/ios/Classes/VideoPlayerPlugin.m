@@ -354,31 +354,6 @@ static inline CGFloat radiansToDegrees(CGFloat radians) {
   _player.volume = (float)((volume < 0.0) ? 0.0 : ((volume > 1.0) ? 1.0 : volume));
 }
 
-- (void)setSpeed:(double)speed result:(FlutterResult)result {
-  if (speed == 1.0 || speed == 0.0) {
-    _player.rate = speed;
-    result(nil);
-  } else if (speed < 0 || speed > 2.0) {
-    result([FlutterError errorWithCode:@"unsupported_speed"
-                               message:@"Speed must be >= 0.0 and <= 2.0"
-                               details:nil]);
-  } else if ((speed > 1.0 && _player.currentItem.canPlayFastForward) ||
-             (speed < 1.0 && _player.currentItem.canPlaySlowForward)) {
-    _player.rate = speed;
-    result(nil);
-  } else {
-    if (speed > 1.0) {
-      result([FlutterError errorWithCode:@"unsupported_fast_forward"
-                                 message:@"This video cannot be played fast forward"
-                                 details:nil]);
-    } else {
-      result([FlutterError errorWithCode:@"unsupported_slow_forward"
-                                 message:@"This video cannot be played slow forward"
-                                 details:nil]);
-    }
-  }
-}
-
 - (CVPixelBufferRef)copyPixelBuffer {
   CMTime outputItemTime = [_videoOutput itemTimeForHostTime:CACurrentMediaTime()];
   if ([_videoOutput hasNewPixelBufferForItemTime:outputItemTime]) {
@@ -386,6 +361,12 @@ static inline CGFloat radiansToDegrees(CGFloat radians) {
   } else {
     return NULL;
   }
+}
+
+- (void)onTextureUnregistered {
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [self dispose];
+  });
 }
 
 - (FlutterError* _Nullable)onCancelWithArguments:(id _Nullable)arguments {
@@ -512,7 +493,22 @@ static inline CGFloat radiansToDegrees(CGFloat radians) {
     if ([@"dispose" isEqualToString:call.method]) {
       [_registry unregisterTexture:textureId];
       [_players removeObjectForKey:@(textureId)];
-      [player dispose];
+      // If the Flutter contains https://github.com/flutter/engine/pull/12695,
+      // the `player` is disposed via `onTextureUnregistered` at the right time.
+      // Without https://github.com/flutter/engine/pull/12695, there is no guarantee that the
+      // texture has completed the un-reregistration. It may leads a crash if we dispose the
+      // `player` before the texture is unregistered. We add a dispatch_after hack to make sure the
+      // texture is unregistered before we dispose the `player`.
+      //
+      // TODO(cyanglaz): Remove this dispatch block when
+      // https://github.com/flutter/flutter/commit/8159a9906095efc9af8b223f5e232cb63542ad0b is in
+      // stable And update the min flutter version of the plugin to the stable version.
+      dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)),
+                     dispatch_get_main_queue(), ^{
+                       if (!player.disposed) {
+                         [player dispose];
+                       }
+                     });
       result(nil);
     } else if ([@"setLooping" isEqualToString:call.method]) {
       [player setIsLooping:[argsMap[@"looping"] boolValue]];
@@ -531,9 +527,6 @@ static inline CGFloat radiansToDegrees(CGFloat radians) {
     } else if ([@"pause" isEqualToString:call.method]) {
       [player pause];
       result(nil);
-    } else if ([@"setSpeed" isEqualToString:call.method]) {
-      [player setSpeed:[[argsMap objectForKey:@"speed"] doubleValue] result:result];
-      return;
     } else {
       result(FlutterMethodNotImplemented);
     }

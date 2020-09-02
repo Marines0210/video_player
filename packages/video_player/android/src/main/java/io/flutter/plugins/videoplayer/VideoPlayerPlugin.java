@@ -29,7 +29,6 @@ import io.flutter.view.FlutterMain;
 import io.flutter.view.TextureRegistry;
 
 
-
 import static com.google.android.exoplayer2.Player.REPEAT_MODE_ALL;
 import static com.google.android.exoplayer2.Player.REPEAT_MODE_OFF;
 
@@ -67,7 +66,6 @@ public class VideoPlayerPlugin implements MethodCallHandler, FlutterPlugin {
 
   /** Register this with the v2 embedding for the plugin to respond to lifecycle callbacks. */
   public VideoPlayerPlugin() {}
-
   private static class VideoPlayer {
 
     private SimpleExoPlayer exoPlayer;
@@ -294,7 +292,6 @@ public class VideoPlayerPlugin implements MethodCallHandler, FlutterPlugin {
       }
     }
   }
-
   private VideoPlayerPlugin(Registrar registrar) {
     this.flutterState =
         new FlutterState(

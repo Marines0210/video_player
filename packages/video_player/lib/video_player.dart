@@ -76,9 +76,7 @@ class VideoPlayerValue {
   ///
   /// Is null when [initialized] is false.
   final Size size;
-
   final double speed;
-
 
   /// Indicates whether or not the video has been loaded and is ready to play.
   bool get initialized => duration != null;
@@ -399,6 +397,7 @@ class VideoPlayerController extends ValueNotifier<VideoPlayerValue> {
     await _applyVolume();
   }
 
+
   Future<void> _applySpeed() async {
     if (!value.initialized || _isDisposed) {
       return;
@@ -417,7 +416,6 @@ class VideoPlayerController extends ValueNotifier<VideoPlayerValue> {
       <String, dynamic>{'textureId': _textureId, 'speed': value.speed},
     );
   }
-
 }
 
 class _VideoAppLifeCycleObserver extends Object with WidgetsBindingObserver {
