@@ -10,8 +10,6 @@
 
 @property(strong, nonatomic) FIAPaymentQueueHandler *paymentQueueHandler;
 
-- (instancetype)initWithReceiptManager:(FIAPReceiptManager *)receiptManager
-    NS_DESIGNATED_INITIALIZER;
-- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithReceiptManager:(FIAPReceiptManager *)receiptManager;
 
 @end

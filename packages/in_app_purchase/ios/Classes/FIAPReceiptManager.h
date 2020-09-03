@@ -10,7 +10,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FIAPReceiptManager : NSObject
 
-- (nullable NSString *)retrieveReceiptWithError:(FlutterError *_Nullable *_Nullable)error;
+- (NSString *)retrieveReceiptWithError:(FlutterError *_Nullable *_Nullable)error;
 
 @end
 

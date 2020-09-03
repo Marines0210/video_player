@@ -1,13 +1,8 @@
-// Copyright 2019 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
 package io.flutter.plugins.webviewflutter;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
@@ -23,27 +18,14 @@ import android.webkit.WebView;
  * <p>See also {@link ThreadedInputConnectionProxyAdapterView}.
  */
 final class InputAwareWebView extends WebView {
-  private static final String TAG = "InputAwareWebView";
+  private final View containerView;
+
   private View threadedInputConnectionProxyView;
   private ThreadedInputConnectionProxyAdapterView proxyAdapterView;
-  private View containerView;
 
   InputAwareWebView(Context context, View containerView) {
     super(context);
     this.containerView = containerView;
-  }
-
-  void setContainerView(View containerView) {
-    this.containerView = containerView;
-
-    if (proxyAdapterView == null) {
-      return;
-    }
-
-    Log.w(TAG, "The containerView has changed while the proxyAdapterView exists.");
-    if (containerView != null) {
-      setInputConnectionTarget(proxyAdapterView);
-    }
   }
 
   /**
@@ -61,11 +43,14 @@ final class InputAwareWebView extends WebView {
 
   /** Sets the proxy adapter view back to its default behavior. */
   void unlockInputConnection() {
-    if (proxyAdapterView == null) {
-      return;
+    if (proxyAdapterView != null) {
+      proxyAdapterView.setLocked(false);
     }
 
-    proxyAdapterView.setLocked(false);
+    // Restart the input connection to avoid ViewRootImpl assuming an incorrect window state.
+    InputMethodManager imm =
+        (InputMethodManager) containerView.getContext().getSystemService(INPUT_METHOD_SERVICE);
+    imm.restartInput(containerView);
   }
 
   /** Restore the original InputConnection, if needed. */
@@ -93,12 +78,6 @@ final class InputAwareWebView extends WebView {
     threadedInputConnectionProxyView = view;
     if (previousProxy == view) {
       // This isn't a new ThreadedInputConnectionProxyView. Ignore it.
-      return super.checkInputConnectionProxy(view);
-    }
-    if (containerView == null) {
-      Log.e(
-          TAG,
-          "Can't create a proxy view because there's no container view. Text input may not work.");
       return super.checkInputConnectionProxy(view);
     }
 
@@ -140,10 +119,6 @@ final class InputAwareWebView extends WebView {
       // No need to reset the InputConnection to the default thread if we've never changed it.
       return;
     }
-    if (containerView == null) {
-      Log.e(TAG, "Can't reset the input connection to the container view because there is none.");
-      return;
-    }
     setInputConnectionTarget(/*targetView=*/ containerView);
   }
 
@@ -156,13 +131,6 @@ final class InputAwareWebView extends WebView {
    * InputConnections should be created on.
    */
   private void setInputConnectionTarget(final View targetView) {
-    if (containerView == null) {
-      Log.e(
-          TAG,
-          "Can't set the input connection target because there is no containerView to use as a handler.");
-      return;
-    }
-
     targetView.requestFocus();
     containerView.post(
         new Runnable() {

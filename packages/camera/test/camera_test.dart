@@ -9,8 +9,6 @@ import 'package:camera/new/src/camera_testing.dart';
 import 'package:camera/new/src/common/native_texture.dart';
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-
   group('Camera', () {
     final List<MethodCall> log = <MethodCall>[];
 

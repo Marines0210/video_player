@@ -17,8 +17,8 @@ class ProductDetails {
       @required this.title,
       @required this.description,
       @required this.price,
-      this.skProduct,
-      this.skuDetail});
+      this.skProduct = null,
+      this.skuDetail = null});
 
   /// The identifier of the product, specified in App Store Connect or Sku in Google Play console.
   final String id;
@@ -67,7 +67,9 @@ class ProductDetails {
 /// A list of [ProductDetails] can be obtained from the this response.
 class ProductDetailsResponse {
   ProductDetailsResponse(
-      {@required this.productDetails, @required this.notFoundIDs, this.error});
+      {@required this.productDetails,
+      @required this.notFoundIDs,
+      this.error = null});
 
   /// Each [ProductDetails] uniquely matches one valid identifier in [identifiers] of [InAppPurchaseConnection.queryProductDetails].
   final List<ProductDetails> productDetails;

@@ -1,9 +1,3 @@
-// Copyright 2019 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
-// ignore_for_file: public_member_api_docs
-
 import 'dart:async';
 import 'dart:io';
 
@@ -58,10 +52,6 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    // App state changed before we got the chance to initialize.
-    if (controller == null || !controller.value.isInitialized) {
-      return;
-    }
     if (state == AppLifecycleState.inactive) {
       controller?.dispose();
     } else if (state == AppLifecycleState.resumed) {
@@ -217,19 +207,6 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
               : null,
         ),
         IconButton(
-          icon: controller != null && controller.value.isRecordingPaused
-              ? Icon(Icons.play_arrow)
-              : Icon(Icons.pause),
-          color: Colors.blue,
-          onPressed: controller != null &&
-                  controller.value.isInitialized &&
-                  controller.value.isRecordingVideo
-              ? (controller != null && controller.value.isRecordingPaused
-                  ? onResumeButtonPressed
-                  : onPauseButtonPressed)
-              : null,
-        ),
-        IconButton(
           icon: const Icon(Icons.stop),
           color: Colors.red,
           onPressed: controller != null &&
@@ -281,7 +258,7 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
     }
     controller = CameraController(
       cameraDescription,
-      ResolutionPreset.medium,
+      ResolutionPreset.high,
       enableAudio: enableAudio,
     );
 
@@ -331,20 +308,6 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
     });
   }
 
-  void onPauseButtonPressed() {
-    pauseVideoRecording().then((_) {
-      if (mounted) setState(() {});
-      showInSnackBar('Video recording paused');
-    });
-  }
-
-  void onResumeButtonPressed() {
-    resumeVideoRecording().then((_) {
-      if (mounted) setState(() {});
-      showInSnackBar('Video recording resumed');
-    });
-  }
-
   Future<String> startVideoRecording() async {
     if (!controller.value.isInitialized) {
       showInSnackBar('Error: select a camera first.');
@@ -384,32 +347,6 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
     }
 
     await _startVideoPlayer();
-  }
-
-  Future<void> pauseVideoRecording() async {
-    if (!controller.value.isRecordingVideo) {
-      return null;
-    }
-
-    try {
-      await controller.pauseVideoRecording();
-    } on CameraException catch (e) {
-      _showCameraException(e);
-      rethrow;
-    }
-  }
-
-  Future<void> resumeVideoRecording() async {
-    if (!controller.value.isRecordingVideo) {
-      return null;
-    }
-
-    try {
-      await controller.resumeVideoRecording();
-    } on CameraException catch (e) {
-      _showCameraException(e);
-      rethrow;
-    }
   }
 
   Future<void> _startVideoPlayer() async {
@@ -479,7 +416,6 @@ List<CameraDescription> cameras;
 Future<void> main() async {
   // Fetch the available cameras before initializing the app.
   try {
-    WidgetsFlutterBinding.ensureInitialized();
     cameras = await availableCameras();
   } on CameraException catch (e) {
     logError(e.code, e.description);

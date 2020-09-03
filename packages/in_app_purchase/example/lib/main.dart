@@ -36,7 +36,7 @@ class _MyAppState extends State<MyApp> {
   bool _isAvailable = false;
   bool _purchasePending = false;
   bool _loading = true;
-  String _queryProductError;
+  String _queryProductError = null;
 
   @override
   void initState() {
@@ -149,12 +149,12 @@ class _MyAppState extends State<MyApp> {
       stack.add(
         Stack(
           children: [
-            Opacity(
+            new Opacity(
               opacity: 0.3,
               child: const ModalBarrier(dismissible: false, color: Colors.grey),
             ),
-            Center(
-              child: CircularProgressIndicator(),
+            new Center(
+              child: new CircularProgressIndicator(),
             ),
           ],
         ),
@@ -213,7 +213,7 @@ class _MyAppState extends State<MyApp> {
         title: Text('Products for Sale',
             style: Theme.of(context).textTheme.headline));
     List<ListTile> productList = <ListTile>[];
-    if (_notFoundIds.isNotEmpty) {
+    if (!_notFoundIds.isEmpty) {
       productList.add(ListTile(
           title: Text('[${_notFoundIds.join(", ")}] not found',
               style: TextStyle(color: ThemeData.light().errorColor)),
@@ -375,12 +375,10 @@ class _MyAppState extends State<MyApp> {
           }
         }
         if (Platform.isIOS) {
-          await InAppPurchaseConnection.instance
-              .completePurchase(purchaseDetails);
+          InAppPurchaseConnection.instance.completePurchase(purchaseDetails);
         } else if (Platform.isAndroid) {
           if (!kAutoConsume && purchaseDetails.productID == _kConsumableId) {
-            await InAppPurchaseConnection.instance
-                .consumePurchase(purchaseDetails);
+            InAppPurchaseConnection.instance.consumePurchase(purchaseDetails);
           }
         }
       }

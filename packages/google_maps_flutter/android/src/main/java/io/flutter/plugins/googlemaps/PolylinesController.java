@@ -81,7 +81,7 @@ class PolylinesController {
     if (polyline == null) {
       return;
     }
-    PolylineBuilder polylineBuilder = new PolylineBuilder(density);
+    PolylineBuilder polylineBuilder = new PolylineBuilder();
     String polylineId = Convert.interpretPolylineOptions(polyline, polylineBuilder);
     PolylineOptions options = polylineBuilder.build();
     addPolyline(polylineId, options, polylineBuilder.consumeTapEvents());

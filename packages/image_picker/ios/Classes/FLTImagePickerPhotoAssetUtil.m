@@ -1,4 +1,4 @@
-// Copyright 2019 The Flutter Authors. All rights reserved.
+// Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -76,7 +76,16 @@
                              suffix:(NSString *)suffix
                                type:(FLTImagePickerMIMEType)type
                        imageQuality:(NSNumber *)imageQuality {
-  NSData *data = [FLTImagePickerMetaDataUtil convertImage:image
+  CGImagePropertyOrientation orientation = (CGImagePropertyOrientation)[metaData[(
+      __bridge NSString *)kCGImagePropertyOrientation] integerValue];
+  UIImage *newImage = [UIImage
+      imageWithCGImage:[image CGImage]
+                 scale:1.0
+           orientation:
+               [FLTImagePickerMetaDataUtil
+                   getNormalizedUIImageOrientationFromCGImagePropertyOrientation:orientation]];
+
+  NSData *data = [FLTImagePickerMetaDataUtil convertImage:newImage
                                                 usingType:type
                                                   quality:imageQuality];
   if (metaData) {
@@ -109,9 +118,19 @@
 
   CGImageDestinationSetProperties(destination, (CFDictionaryRef)gifMetaProperties);
 
+  CGImagePropertyOrientation orientation = (CGImagePropertyOrientation)[metaData[(
+      __bridge NSString *)kCGImagePropertyOrientation] integerValue];
+
   for (NSInteger index = 0; index < gifInfo.images.count; index++) {
     UIImage *image = (UIImage *)[gifInfo.images objectAtIndex:index];
-    CGImageDestinationAddImage(destination, image.CGImage, (CFDictionaryRef)frameProperties);
+    UIImage *newImage = [UIImage
+        imageWithCGImage:[image CGImage]
+                   scale:1.0
+             orientation:
+                 [FLTImagePickerMetaDataUtil
+                     getNormalizedUIImageOrientationFromCGImagePropertyOrientation:orientation]];
+
+    CGImageDestinationAddImage(destination, newImage.CGImage, (CFDictionaryRef)frameProperties);
   }
 
   CGImageDestinationFinalize(destination);

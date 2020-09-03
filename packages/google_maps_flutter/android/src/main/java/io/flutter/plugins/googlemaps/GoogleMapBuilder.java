@@ -18,7 +18,6 @@ class GoogleMapBuilder implements GoogleMapOptionsSink {
   private boolean myLocationEnabled = false;
   private boolean myLocationButtonEnabled = false;
   private boolean indoorEnabled = true;
-  private boolean trafficEnabled = false;
   private Object initialMarkers;
   private Object initialPolygons;
   private Object initialPolylines;
@@ -33,7 +32,6 @@ class GoogleMapBuilder implements GoogleMapOptionsSink {
     controller.setMyLocationEnabled(myLocationEnabled);
     controller.setMyLocationButtonEnabled(myLocationButtonEnabled);
     controller.setIndoorEnabled(indoorEnabled);
-    controller.setTrafficEnabled(trafficEnabled);
     controller.setTrackCameraPosition(trackCameraPosition);
     controller.setInitialMarkers(initialMarkers);
     controller.setInitialPolygons(initialPolygons);
@@ -110,11 +108,6 @@ class GoogleMapBuilder implements GoogleMapOptionsSink {
   @Override
   public void setIndoorEnabled(boolean indoorEnabled) {
     this.indoorEnabled = indoorEnabled;
-  }
-
-  @Override
-  public void setTrafficEnabled(boolean trafficEnabled) {
-    this.trafficEnabled = trafficEnabled;
   }
 
   @Override

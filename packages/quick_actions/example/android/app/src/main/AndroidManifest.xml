@@ -6,22 +6,15 @@
   <application android:name="io.flutter.app.FlutterApplication"
                android:label="quick_actions_example"
                android:icon="@mipmap/ic_launcher">
-    <activity android:name=".EmbeddingV1Activity"
+    <activity android:name=".MainActivity"
               android:launchMode="singleTop"
               android:theme="@style/LaunchTheme"
               android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection"
               android:hardwareAccelerated="true"
-              android:windowSoftInputMode="adjustResize"
-        android:exported="true">
+              android:windowSoftInputMode="adjustResize">
       <meta-data
           android:name="io.flutter.app.android.SplashScreenUntilFirstFrame"
           android:value="true"/>
-    </activity>
-    <activity android:name=".MainActivity"
-      android:theme="@style/LaunchTheme"
-      android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection"
-      android:hardwareAccelerated="true"
-      android:windowSoftInputMode="adjustResize">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
         <category android:name="android.intent.category.LAUNCHER"/>

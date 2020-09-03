@@ -1,4 +1,4 @@
-// Copyright 2019 The Flutter Authors. All rights reserved.
+// Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
 import io.flutter.plugin.common.MethodCall;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,20 +27,14 @@ class ImagePickerCache {
   private static final String SHARED_PREFERENCE_ERROR_CODE_KEY = "flutter_image_picker_error_code";
   private static final String SHARED_PREFERENCE_ERROR_MESSAGE_KEY =
       "flutter_image_picker_error_message";
-
   private static final String SHARED_PREFERENCE_MAX_WIDTH_KEY = "flutter_image_picker_max_width";
-
   private static final String SHARED_PREFERENCE_MAX_HEIGHT_KEY = "flutter_image_picker_max_height";
-
   private static final String SHARED_PREFERENCE_IMAGE_QUALITY_KEY =
       "flutter_image_picker_image_quality";
-
   private static final String SHARED_PREFERENCE_TYPE_KEY = "flutter_image_picker_type";
   private static final String SHARED_PREFERENCE_PENDING_IMAGE_URI_PATH_KEY =
       "flutter_image_picker_pending_image_uri";
-
-  @VisibleForTesting
-  static final String SHARED_PREFERENCES_NAME = "flutter_image_picker_shared_preference";
+  private static final String SHARED_PREFERENCES_NAME = "flutter_image_picker_shared_preference";
 
   private SharedPreferences prefs;
 
@@ -154,9 +147,9 @@ class ImagePickerCache {
       }
       if (prefs.contains(SHARED_PREFERENCE_IMAGE_QUALITY_KEY)) {
         final int imageQuality = prefs.getInt(SHARED_PREFERENCE_IMAGE_QUALITY_KEY, 100);
-        resultMap.put(MAP_KEY_IMAGE_QUALITY, imageQuality);
+        resultMap.put(MAP_KEY_MAX_HEIGHT, imageQuality);
       } else {
-        resultMap.put(MAP_KEY_IMAGE_QUALITY, 100);
+        resultMap.put(MAP_KEY_MAX_HEIGHT, 100);
       }
     }
 

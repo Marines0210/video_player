@@ -1,9 +1,3 @@
-// Copyright 2019 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
-// ignore_for_file: public_member_api_docs
-
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'page.dart';
@@ -95,43 +89,43 @@ class MarkerIconsBodyState extends State<MarkerIconsBody> {
               controller: _topController,
               keyboardType: TextInputType.number,
               textAlign: TextAlign.center,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 hintText: "Top",
               ),
             ),
           ),
-          const Spacer(),
+          Spacer(),
           Flexible(
             flex: 2,
             child: TextField(
               controller: _bottomController,
               keyboardType: TextInputType.number,
               textAlign: TextAlign.center,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 hintText: "Bottom",
               ),
             ),
           ),
-          const Spacer(),
+          Spacer(),
           Flexible(
             flex: 2,
             child: TextField(
               controller: _leftController,
               keyboardType: TextInputType.number,
               textAlign: TextAlign.center,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 hintText: "Left",
               ),
             ),
           ),
-          const Spacer(),
+          Spacer(),
           Flexible(
             flex: 2,
             child: TextField(
               controller: _rightController,
               keyboardType: TextInputType.number,
               textAlign: TextAlign.center,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 hintText: "Right",
               ),
             ),

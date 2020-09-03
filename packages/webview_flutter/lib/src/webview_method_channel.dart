@@ -10,8 +10,6 @@ import '../platform_interface.dart';
 
 /// A [WebViewPlatformController] that uses a method channel to control the webview.
 class MethodChannelWebViewPlatform implements WebViewPlatformController {
-  /// Constructs an instance that will listen for webviews broadcasting to the
-  /// given [id], using the given [WebViewPlatformCallbacksHandler].
   MethodChannelWebViewPlatform(int id, this._platformCallbacksHandler)
       : assert(_platformCallbacksHandler != null),
         _channel = MethodChannel('plugins.flutter.io/webview_$id') {
@@ -33,7 +31,7 @@ class MethodChannelWebViewPlatform implements WebViewPlatformController {
         _platformCallbacksHandler.onJavaScriptChannelMessage(channel, message);
         return true;
       case 'navigationRequest':
-        return await _platformCallbacksHandler.onNavigationRequest(
+        return _platformCallbacksHandler.onNavigationRequest(
           url: call.arguments['url'],
           isForMainFrame: call.arguments['isForMainFrame'],
         );
@@ -105,10 +103,7 @@ class MethodChannelWebViewPlatform implements WebViewPlatformController {
         'removeJavascriptChannels', javascriptChannelNames.toList());
   }
 
-  @override
-  Future<String> getTitle() => _channel.invokeMethod<String>("getTitle");
-
-  /// Method channel implementation for [WebViewPlatform.clearCookies].
+  /// Method channel mplementation for [WebViewPlatform.clearCookies].
   static Future<bool> clearCookies() {
     return _cookieManagerChannel
         .invokeMethod<bool>('clearCookies')
@@ -124,17 +119,9 @@ class MethodChannelWebViewPlatform implements WebViewPlatformController {
       map[key] = value;
     }
 
-    void _addSettingIfPresent<T>(String key, WebSetting<T> setting) {
-      if (!setting.isPresent) {
-        return;
-      }
-      map[key] = setting.value;
-    }
-
     _addIfNonNull('jsMode', settings.javascriptMode?.index);
     _addIfNonNull('hasNavigationDelegate', settings.hasNavigationDelegate);
     _addIfNonNull('debuggingEnabled', settings.debuggingEnabled);
-    _addSettingIfPresent('userAgent', settings.userAgent);
     return map;
   }
 
@@ -148,8 +135,6 @@ class MethodChannelWebViewPlatform implements WebViewPlatformController {
       'initialUrl': creationParams.initialUrl,
       'settings': _webSettingsToMap(creationParams.webSettings),
       'javascriptChannelNames': creationParams.javascriptChannelNames.toList(),
-      'userAgent': creationParams.userAgent,
-      'autoMediaPlaybackPolicy': creationParams.autoMediaPlaybackPolicy.index,
     };
   }
 }

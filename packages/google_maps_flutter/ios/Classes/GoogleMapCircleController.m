@@ -73,17 +73,17 @@ static UIColor* ToColor(NSNumber* data) { return [FLTGoogleMapJsonConversions to
 static void InterpretCircleOptions(NSDictionary* data, id<FLTGoogleMapCircleOptionsSink> sink,
                                    NSObject<FlutterPluginRegistrar>* registrar) {
   NSNumber* consumeTapEvents = data[@"consumeTapEvents"];
-  if (consumeTapEvents != nil) {
+  if (consumeTapEvents) {
     [sink setConsumeTapEvents:ToBool(consumeTapEvents)];
   }
 
   NSNumber* visible = data[@"visible"];
-  if (visible != nil) {
+  if (visible) {
     [sink setVisible:ToBool(visible)];
   }
 
   NSNumber* zIndex = data[@"zIndex"];
-  if (zIndex != nil) {
+  if (zIndex) {
     [sink setZIndex:ToInt(zIndex)];
   }
 
@@ -93,22 +93,22 @@ static void InterpretCircleOptions(NSDictionary* data, id<FLTGoogleMapCircleOpti
   }
 
   NSNumber* radius = data[@"radius"];
-  if (radius != nil) {
+  if (radius) {
     [sink setRadius:ToDistance(radius)];
   }
 
   NSNumber* strokeColor = data[@"strokeColor"];
-  if (strokeColor != nil) {
+  if (strokeColor) {
     [sink setStrokeColor:ToColor(strokeColor)];
   }
 
   NSNumber* strokeWidth = data[@"strokeWidth"];
-  if (strokeWidth != nil) {
+  if (strokeWidth) {
     [sink setStrokeWidth:ToInt(strokeWidth)];
   }
 
   NSNumber* fillColor = data[@"fillColor"];
-  if (fillColor != nil) {
+  if (fillColor) {
     [sink setFillColor:ToColor(fillColor)];
   }
 }

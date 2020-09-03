@@ -95,7 +95,7 @@ static NSArray* PositionToJson(CLLocationCoordinate2D data) {
 static void InterpretMarkerOptions(NSDictionary* data, id<FLTGoogleMapMarkerOptionsSink> sink,
                                    NSObject<FlutterPluginRegistrar>* registrar) {
   NSNumber* alpha = data[@"alpha"];
-  if (alpha != nil) {
+  if (alpha) {
     [sink setAlpha:ToFloat(alpha)];
   }
   NSArray* anchor = data[@"anchor"];
@@ -103,7 +103,7 @@ static void InterpretMarkerOptions(NSDictionary* data, id<FLTGoogleMapMarkerOpti
     [sink setAnchor:ToPoint(anchor)];
   }
   NSNumber* draggable = data[@"draggable"];
-  if (draggable != nil) {
+  if (draggable) {
     [sink setDraggable:ToBool(draggable)];
   }
   NSArray* icon = data[@"icon"];
@@ -112,11 +112,11 @@ static void InterpretMarkerOptions(NSDictionary* data, id<FLTGoogleMapMarkerOpti
     [sink setIcon:image];
   }
   NSNumber* flat = data[@"flat"];
-  if (flat != nil) {
+  if (flat) {
     [sink setFlat:ToBool(flat)];
   }
   NSNumber* consumeTapEvents = data[@"consumeTapEvents"];
-  if (consumeTapEvents != nil) {
+  if (consumeTapEvents) {
     [sink setConsumeTapEvents:ToBool(consumeTapEvents)];
   }
   InterpretInfoWindow(sink, data);
@@ -125,15 +125,15 @@ static void InterpretMarkerOptions(NSDictionary* data, id<FLTGoogleMapMarkerOpti
     [sink setPosition:ToLocation(position)];
   }
   NSNumber* rotation = data[@"rotation"];
-  if (rotation != nil) {
+  if (rotation) {
     [sink setRotation:ToDouble(rotation)];
   }
   NSNumber* visible = data[@"visible"];
-  if (visible != nil) {
+  if (visible) {
     [sink setVisible:ToBool(visible)];
   }
   NSNumber* zIndex = data[@"zIndex"];
-  if (zIndex != nil) {
+  if (zIndex) {
     [sink setZIndex:ToInt(zIndex)];
   }
 }
@@ -189,7 +189,7 @@ static UIImage* ExtractIcon(NSObject<FlutterPluginRegistrar>* registrar, NSArray
     } else {
       NSString* error =
           [NSString stringWithFormat:@"'fromAssetImage' should have exactly 3 arguments. Got: %lu",
-                                     (unsigned long)iconData.count];
+                                     iconData.count];
       NSException* exception = [NSException exceptionWithName:@"InvalidBitmapDescriptor"
                                                        reason:error
                                                      userInfo:nil];
@@ -209,7 +209,7 @@ static UIImage* ExtractIcon(NSObject<FlutterPluginRegistrar>* registrar, NSArray
     } else {
       NSString* error = [NSString
           stringWithFormat:@"fromBytes should have exactly one argument, the bytes. Got: %lu",
-                           (unsigned long)iconData.count];
+                           iconData.count];
       NSException* exception = [NSException exceptionWithName:@"InvalidByteDescriptor"
                                                        reason:error
                                                      userInfo:nil];
@@ -283,17 +283,6 @@ static UIImage* ExtractIcon(NSObject<FlutterPluginRegistrar>* registrar, NSArray
   }
   [_methodChannel invokeMethod:@"marker#onTap" arguments:@{@"markerId" : markerId}];
   return controller.consumeTapEvents;
-}
-- (void)onMarkerDragEnd:(NSString*)markerId coordinate:(CLLocationCoordinate2D)coordinate {
-  if (!markerId) {
-    return;
-  }
-  FLTGoogleMapMarkerController* controller = _markerIdToController[markerId];
-  if (!controller) {
-    return;
-  }
-  [_methodChannel invokeMethod:@"marker#onDragEnd"
-                     arguments:@{@"markerId" : markerId, @"position" : PositionToJson(coordinate)}];
 }
 - (void)onInfoWindowTap:(NSString*)markerId {
   if (markerId && _markerIdToController[markerId]) {

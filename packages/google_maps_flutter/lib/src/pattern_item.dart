@@ -1,7 +1,3 @@
-// Copyright 2019 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
 part of google_maps_flutter;
 
 /// Item used in the stroke pattern for a Polyline.
@@ -9,7 +5,6 @@ part of google_maps_flutter;
 class PatternItem {
   const PatternItem._(this._json);
 
-  /// A dot used in the stroke pattern for a [Polyline].
   static const PatternItem dot = PatternItem._(<dynamic>['dot']);
 
   /// A dash used in the stroke pattern for a [Polyline].

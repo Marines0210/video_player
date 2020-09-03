@@ -5,7 +5,6 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_test/flutter_test.dart' show TestWidgetsFlutterBinding;
 import 'package:in_app_purchase/src/in_app_purchase/purchase_details.dart';
 import 'package:test/test.dart';
 
@@ -21,8 +20,6 @@ import '../billing_client_wrappers/sku_details_wrapper_test.dart';
 import '../billing_client_wrappers/purchase_wrapper_test.dart';
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-
   final StubInAppPurchasePlatform stubPlatform = StubInAppPurchasePlatform();
   GooglePlayConnection connection;
   const String startConnectionCall =
